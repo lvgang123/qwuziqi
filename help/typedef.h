@@ -1,4 +1,7 @@
-#ifndef TYPEDEF_H
-#define TYPEDEF_H
+/**
+ * 结构部分创建 整理:lvgang 2020-6-30
+ */
+#include <iostream>
+#include <vector>
 
-#endif // TYPEDEF_H
+typedef std::vector<std::vector<int>> vChess;

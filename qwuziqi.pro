@@ -1,4 +1,6 @@
-QT -= gui
+QT     += core gui network
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -16,10 +18,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     help/app.cpp \
-    help/qhelper.cpp
+    function/appinit.cpp \
+    AI/aido.cpp \
+    function/judgemodel.cpp \
+    function/chess.cpp \
+    help/qhelper.cpp \
+    frmshow/show.cpp
 
 HEADERS += \
+    AI/chead.h \
+    AI/aido.h \
     help/app.h \
     help/head.h \
+    help/typedef.h \
     help/qhelper.h \
-    help/typedef.h
+    function/appinit.h \
+    function/judgemodel.h \
+    function/chess.h \
+    frmshow/show.h
