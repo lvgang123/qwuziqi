@@ -44,6 +44,7 @@ Show::~Show()
 
 void Show::start()
 {
+    qcout<<LcoalvChess->at(0).at(0);
     qcout<<"show model start";
     update();
 }
