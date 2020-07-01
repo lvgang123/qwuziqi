@@ -2,6 +2,9 @@
 #include "qpainter.h"
 #include <QMouseEvent>
 #include <QMessageBox>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
 
 Show* Show::self;
 
@@ -21,16 +24,17 @@ Show *Show::Instance()        //instance译为例子
 void Show::setConnInfo(vChess* inchess)
 {
     this->LcoalvChess = inchess;
-    std::cout<<LcoalvChess<<"\n";
+    //std::cout<<LcoalvChess<<"\n";
 }
 
 Show::Show(QWidget *parent) : QMainWindow(parent)
 {
-    // 设置棋盘大小
-    setFixedSize(APP::kBoardMargin * 2 + APP::kBlockSize * APP::kBoardSizeNum, APP::kBoardMargin * 2 + APP::kBlockSize * APP::kBoardSizeNum);
-
-    // 开启鼠标hover功能，这两句一般要设置window的
+    // 设置棋盘大小,开启鼠标hover功能
+    setFixedSize(APP::kBoardMargin * 2 + APP::kBlockSize * (APP::kBoardSizeNum-1),
+                 APP::kBoardMargin * 2 + APP::kBlockSize * (APP::kBoardSizeNum-1));
     setMouseTracking(true);
+
+    this->addMenu();
 
     this->show();
 
@@ -42,6 +46,44 @@ Show::~Show()
         self = nullptr;
 }
 
+void Show::addMenu()
+{
+    //双人对战
+    QMenu *gameMenu = menuBar()->addMenu(tr("Game")); // menuBar默认是存在的，直接加菜单就可以了
+    QAction *actionPVP = new QAction("双人对战", this);
+    connect(actionPVP, &QAction::triggered,
+            [=](){
+                    qcout<<"双人大战";
+                });
+    gameMenu->addAction(actionPVP);
+
+    //人机对战
+    QAction *actionPVE = new QAction("人机对战", this);
+    connect(actionPVE, &QAction::triggered,
+            [=](){
+                    qcout<<"人机对战";
+                });
+    gameMenu->addAction(actionPVE);
+
+    //重开
+    QAction *actionRes = new QAction("重开", this);
+    connect(actionRes, &QAction::triggered,
+            [=](){
+                    qcout<<"棋盘重置";
+                    this->restart();
+                });
+    gameMenu->addAction(actionRes);
+
+    //悔棋
+    QAction *actionBefore = new QAction("悔棋", this);
+    connect(actionBefore, &QAction::triggered,
+            [=](){
+                    qcout<<"悔棋";
+                });
+    gameMenu->addAction(actionBefore);
+
+}
+
 void Show::start()
 {
     qcout<<LcoalvChess->at(0).at(0);
@@ -49,14 +91,13 @@ void Show::start()
     update();
 }
 
-void Show::paintEvent(QPaintEvent *event)
+void Show::paintEvent(QPaintEvent *event)           //耗费资源
 {
-    qcout<<&APP::gameMapVec;
     QPainter painter(this);
    // 绘制棋盘网格
    painter.setRenderHint(QPainter::Antialiasing, true); // 抗锯齿
 
-   for (int i = 0; i < APP::kBoardSizeNum + 1; i++)
+   for (int i = 0; i < APP::kBoardSizeNum; i++)
    {
        painter.drawLine(APP::kBoardMargin + APP::kBlockSize * i, APP::kBoardMargin, APP::kBoardMargin + APP::kBlockSize * i,
                         size().height() - APP::kBoardMargin);
@@ -68,7 +109,7 @@ void Show::paintEvent(QPaintEvent *event)
     // 绘制落子标记
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
-    if (clickPosRow > 0 && clickPosRow < APP::kBoardSizeNum)
+    if (clickPosRow >= 0 && clickPosRow < APP::kBoardSizeNum)
     {
        if (/*game->playerFlag*/1)    //判断当前状态
            brush.setColor(Qt::white);
@@ -81,9 +122,28 @@ void Show::paintEvent(QPaintEvent *event)
 
 
    //绘制棋子
+    for(int i = 0; i < APP::gameMapVec.size();i++)
+    {
+        for(int j = 0;j<APP::gameMapVec[i].size();j++)
+        {
+            if(APP::gameMapVec[i][j] == 1)
+            {
+                brush.setColor(Qt::white);
+                painter.setBrush(brush);
+                painter.drawEllipse(APP::kBoardMargin + APP::kBlockSize * j - APP::kRadius, APP::kBoardMargin
+                                    + APP::kBlockSize * i - APP::kRadius, APP::kRadius * 2, APP::kRadius * 2);
 
-   //发送判断信号
+            }else if(APP::gameMapVec[i][j] == -1)
+            {
+                brush.setColor(Qt::black);
+                painter.setBrush(brush);
+                painter.drawEllipse(APP::kBoardMargin + APP::kBlockSize * j - APP::kRadius, APP::kBoardMargin
+                                    + APP::kBlockSize * i - APP::kRadius, APP::kRadius * 2, APP::kRadius * 2);
+            }
+        }
+    }
 
+    painter.end();
 }
 
 void Show::mouseMoveEvent(QMouseEvent *event)
@@ -92,22 +152,22 @@ void Show::mouseMoveEvent(QMouseEvent *event)
     int x = event->x();
     int y = event->y();
 
-    // 棋盘边缘不能落子
-    if (x >=  APP::kBoardMargin +  APP::kBlockSize / 2 &&
-            x < size().width() -  APP::kBoardMargin &&
-            y >=  APP::kBoardMargin +  APP::kBlockSize / 2 &&
-            y < size().height()-  APP::kBoardMargin)
+    // 对鼠标落定范围进行限制
+    if (x >=  APP::kBoardMargin -  APP::kBlockSize / 2 &&
+        x <= size().width() -  APP::kBoardMargin + APP::kBlockSize / 2 &&
+        y >=  APP::kBoardMargin -  APP::kBlockSize / 2 &&
+        y <= size().height()-  APP::kBoardMargin + APP::kBlockSize / 2)
     {
         // 获取最近的左上角的点
-        int col = x /  APP::kBlockSize;
-        int row = y /  APP::kBlockSize;
+        int col = (x - APP::kBoardMargin) /  APP::kBlockSize;
+        int row = (y - APP::kBoardMargin) /  APP::kBlockSize;
 
         int leftTopPosX =  APP::kBoardMargin +  APP::kBlockSize * col;
         int leftTopPosY =  APP::kBoardMargin +  APP::kBlockSize * row;
 
         // 根据距离算出合适的点击位置,一共四个点，根据半径距离选最近的
-        clickPosRow = -1; // 初始化最终的值
-        clickPosCol = -1;
+        int clickPosRow = -1; // 初始化最终的值
+        int clickPosCol = -1;
         int len = 0; // 计算完后取整就可以了
 
         // 确定一个误差在范围内的点，且只可能确定一个出来
@@ -136,18 +196,52 @@ void Show::mouseMoveEvent(QMouseEvent *event)
             clickPosRow = row + 1;
             clickPosCol = col + 1;
         }
+
+        if(this->clickPosRow != clickPosRow || this->clickPosCol != clickPosCol)
+        {
+            this->clickPosRow = clickPosRow;
+            this->clickPosCol = clickPosCol;
+            update();
+        }
     }
 
-    // 存了坐标后也要重绘
-    update();
 }
-
 
 void Show::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (/*game_type != BOT || game->playerFlag*/1)
+    if (clickPosRow>=0 && clickPosCol>=0)
     {
         emit actionByPerson(clickPosRow, clickPosCol);
+        qcout << QString("(%1,%2)").arg(clickPosCol).arg(clickPosRow);
+    }
+}
 
+void Show::UpdateShow()
+{
+    update();
+}
+
+void Show::restart()
+{
+    APP::initchess();
+    update();
+}
+
+void Show::GameOver(int index)
+{
+    QString str;
+    if (index == 1)
+        str = "white player";
+    else if (index == -1)
+        str = "black player";
+    else if (index == 0)
+        str = "no player";
+    QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!\nDo you want restart?"
+                                                                    ,QMessageBox::Yes, QMessageBox::No);
+
+    // 重置游戏状态，否则容易死循环
+    if (btnValue == QMessageBox::Yes)
+    {
+        restart();
     }
 }

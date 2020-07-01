@@ -33,7 +33,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private slots:
-
+    //添加菜单
+    void addMenu();
 
 signals:
     //人工落子完成
@@ -43,9 +44,14 @@ signals:
 public slots:
     //模块启动函数
     void start();
-
+    //模块设定
     void setConnInfo(vChess* inchess);
-
+    //重绘界面接口
+    void UpdateShow();
+    //重置游戏
+    void restart();
+    //游戏结束槽函数
+    void GameOver(int index);
 };
 
 #endif // SHOW_H

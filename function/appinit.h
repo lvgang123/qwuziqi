@@ -15,10 +15,20 @@ private:
     static QScopedPointer<AppInit> self;
 
 private slots:
+    //界面初始化
+    void initShow();
 
+    //Chess模块初始化
+    void initChess();
+
+    //判断初始化
+    void initJudge();
+
+    //AI初始化
+    void initAIdo();
 
 public slots:
-    //程序函数
+    //程序启动函数
     void start();
 };
 

@@ -13,6 +13,7 @@ public:
     static int WorkModle;               //下棋模式，0-人机  1-人人
 
     static vChess gameMapVec;           //当前游戏棋盘和棋子的情况,空白为0，白子1，黑子-1
+    //static QList<QPoint>
 
     //棋盘布局
     static int kBoardSizeNum;           // 棋盘尺寸
@@ -22,8 +23,6 @@ public:
     static int kBlockSize;              // 格子的大小
     static int kPosDelta;               // 鼠标点击的模糊距离上限
     static int kAIDelay;                // AI下棋的思考时间
-
-
 
     //初始化棋盘
     static void initchess();

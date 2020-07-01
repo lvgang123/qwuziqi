@@ -14,12 +14,24 @@ public:
 private:
     static QScopedPointer<Chess> self;
 
-private slots:
+    vChess* LcoalvChess;
 
+private slots:
+    //AI下棋
+    void ChessAI();
+
+signals:
+    //棋盘显示更新
+    void UpdateShow();
+    //游戏结束,1-白胜 -1-黑胜
+    void GameOver(int);
+    //添加棋子结束信号
+    void addOver(int next);
 
 public slots:
-    //模块启动函数
     void start();
+    void setConnInfo(vChess* inchess);
+    void actionAddPiece(int row ,int col);      //棋子增加函数
 };
 
 #endif // CHESS_H

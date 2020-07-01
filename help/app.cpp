@@ -1,7 +1,9 @@
 #include "app.h"
 
+int APP::WorkModle = 1;
+
 int APP::kBoardSizeNum = 15;
-int APP::kBoardMargin = 30;
+int APP::kBoardMargin = 50;
 int APP::kRadius = 15;
 int APP::kMarkSize = 6;
 int APP::kBlockSize = 40;

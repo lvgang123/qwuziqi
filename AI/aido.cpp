@@ -26,15 +26,62 @@ AIDO::~AIDO()
 {
 }
 
-string AIDO::test()
+void AIDO::start()
 {
-    (*LcoalvChess)[0][0] = 1;
-    string out="AI model test";
-    return out;
+
 }
 
 void AIDO::setConnInfo(vChess* inchess)
 {
-    this->LcoalvChess = inchess;
-    cout<<LcoalvChess<<"\n";
+    LcoalvChess = inchess;
 }
+
+void AIDO::initScoreVec()
+{
+    scoreMapVec.clear();
+    for (int i = 0; i < LcoalvChess->size(); i++)
+    {
+        std::vector<int> lineScores;
+        for (int j = 0; j < LcoalvChess->size(); j++)
+            lineScores.push_back(0);
+        scoreMapVec.push_back(lineScores);
+    }
+}
+
+void AIDO::actionByAI(int &row,int &col)
+{
+
+}
+
+void AIDO::calculateScore()
+{
+    // 清空评分数组
+    initScoreVec();
+
+    // 计分（此处是完全遍历，其实可以用bfs或者dfs加减枝降低复杂度，通过调整权重值，调整AI智能程度以及攻守风格）
+    for (int row = 0; row < LcoalvChess->size(); row++)
+        for (int col = 0; col < LcoalvChess->size(); col++)
+        {
+            //已有棋子点跳过
+            if((* LcoalvChess)[row][col] != 0)
+                continue;
+
+            // 遍历周围八个方向
+            for (int y = -1; y <= 1; y++)
+                for (int x = -1; x <= 1; x++)
+                {
+                    int personNum = 0; // 玩家连成子的个数
+                    int botNum = 0; // AI连成子的个数
+                    int emptyNum = 0; // 各方向空白位的个数
+
+                    // 原坐标不算
+                    if (y == 0 && x == 0){
+                        continue;
+                    }
+
+
+
+                }
+        }
+}
+

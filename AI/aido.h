@@ -19,11 +19,17 @@ private:
     static unique_ptr<AIDO> self;
 
     vChess* LcoalvChess;
+    vChess scoreMapVec;
+
+
+private:
+    void initScoreVec();
+    void calculateScore();
 
 public:
-    string test();
+    void start();
     void setConnInfo(vChess* inchess);
-
+    void actionByAI(int &row,int &col);
 };
 
 #endif // AIDO_H
