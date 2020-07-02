@@ -85,6 +85,18 @@ void Show::addMenu()
                 });
     gameMenu->addAction(actionPVE);
 
+    //机器对战
+    QAction *actionEVE = new QAction("机器对战", this);
+    connect(actionEVE, &QAction::triggered,
+            [=](){
+                    if(APP::WorkModle == -1)
+                        this->restart();
+
+                    qcout<<"机器大战";
+                    APP::WorkModle = -1;
+                });
+    gameMenu->addAction(actionEVE);
+
     //重开
     QAction *actionRes = new QAction("重开", this);
     connect(actionRes, &QAction::triggered,
@@ -227,7 +239,7 @@ void Show::mouseMoveEvent(QMouseEvent *event)
 
 void Show::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (clickPosRow>=0 && clickPosCol>=0)
+    if (clickPosRow>=0 && clickPosCol>=0 && APP::WorkModle != -1)
     {
         if(APP::WorkModle != 0 || JudgeModel::Instance()->NextColour() != APP::AIColor){
             emit actionByPerson(clickPosRow, clickPosCol);
@@ -246,8 +258,8 @@ void Show::restart()
     APP::initchess();
 
     //机器先走往中间首子靠
-    if(APP::WorkModle == 0 && APP::AIColor == -1){
-        APP::gameMapVec[7][7] = -1;
+    if((APP::WorkModle == 0 && APP::AIColor == -1)||APP::WorkModle == -1){
+        emit actionByPerson(7, 7);
     }
 
     update();

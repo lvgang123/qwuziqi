@@ -219,12 +219,12 @@ int AIDO::CalculateTran(vChess killMapVec,vChess makeMapVec)
     //对杀2-5评分,防守
     for(int i=0;i<killMapVec.size();i++){
         //杀2
-        score += 8 * linejudge(killMapVec[i],2,true,-LocalAICorlor);
+        score += 6 * linejudge(killMapVec[i],2,true,-LocalAICorlor);
         //杀3，双活三为必杀
         if(linejudge(killMapVec[i],3,true,-LocalAICorlor)>3)
             score += 10000 /** linejudge(killMapVec[i],3,true,-LocalAICorlor)*/;
         else if(linejudge(killMapVec[i],3,true,-LocalAICorlor)>0)
-            score += 120 * linejudge(killMapVec[i],3,true,-LocalAICorlor);
+            score += 140 * linejudge(killMapVec[i],3,true,-LocalAICorlor);
         else
             score += 50 * linejudge(killMapVec[i],3,false,-LocalAICorlor);
         //杀4，活四为必杀，单四加活三同样必杀
@@ -233,7 +233,7 @@ int AIDO::CalculateTran(vChess killMapVec,vChess makeMapVec)
         else if(linejudge(killMapVec[i],3,true,-LocalAICorlor)>0 && linejudge(killMapVec[i],4,false,-LocalAICorlor)>0)
             score += 10000 /** linejudge(killMapVec[i],4,false,-LocalAICorlor)*/;
         else
-            score += 130 * linejudge(killMapVec[i],4,false,-LocalAICorlor);
+            score += 90 * linejudge(killMapVec[i],4,false,-LocalAICorlor);
         //杀5，必杀
         if(linejudge(killMapVec[i],5,false,-LocalAICorlor)>0)
             score += 50000;
@@ -243,21 +243,21 @@ int AIDO::CalculateTran(vChess killMapVec,vChess makeMapVec)
     //对成1-5评分
     for(int i=0;i<makeMapVec.size();i++){
         //成2
-        score += 10 * linejudge(makeMapVec[i],2,true,LocalAICorlor);
+        score += 8 * linejudge(makeMapVec[i],2,true,LocalAICorlor);
         //成3，双活三为必成
         if(linejudge(makeMapVec[i],3,true,LocalAICorlor)>3)
             score += 20000 /** linejudge(makeMapVec[i],3,true,LocalAICorlor)*/;
         else if(linejudge(makeMapVec[i],3,true,LocalAICorlor)>0)
-            score += 140 * linejudge(makeMapVec[i],3,true,LocalAICorlor);
+            score += 150 * linejudge(makeMapVec[i],3,true,LocalAICorlor);
         else
-            score += 60 * linejudge(makeMapVec[i],3,false,LocalAICorlor);
+            score += 70 * linejudge(makeMapVec[i],3,false,LocalAICorlor);
         //成4，活四为必成，单四加活三同样必成
         if(linejudge(makeMapVec[i],4,true,LocalAICorlor)>0)
             score += 40000 /** linejudge(makeMapVec[i],4,true,LocalAICorlor)*/;
         else if(linejudge(makeMapVec[i],3,true,LocalAICorlor)>0 && linejudge(makeMapVec[i],4,false,LocalAICorlor)>0)
             score += 20000 /** linejudge(makeMapVec[i],4,false,-LocalAICorlor)*/;
         else
-            score += 150 * linejudge(makeMapVec[i],4,false,LocalAICorlor);
+            score += 130 * linejudge(makeMapVec[i],4,false,LocalAICorlor);
         //成5，必成
         if(linejudge(makeMapVec[i],5,false,LocalAICorlor)>0)
             score += 100000 * linejudge(makeMapVec[i],5,false,LocalAICorlor);
@@ -282,14 +282,14 @@ int AIDO::linejudge(LChess onekill,int level,bool active,int judge_it)
                 if(level == 3){
                     if((k+4)>=onekill.size())
                         break;
-                    if(onekill[k] != 0 && onekill[k+4] != 0)
+                    if(onekill[k] != 0 || onekill[k+4] != 0)
                         break;
                 }
                 //活四判断
                 if(level == 4){
                     if((k+5)>=onekill.size())
                         break;
-                    if(onekill[k] != 0 && onekill[k+5] != 0)
+                    if(onekill[k] != 0 || onekill[k+5] != 0)
                         break;
                 }
 
@@ -300,7 +300,7 @@ int AIDO::linejudge(LChess onekill,int level,bool active,int judge_it)
                 judge_mark = true;
         }
 
-        if(person_count >= level && judge_mark)
+        if(person_count == level && judge_mark)
             out_count++;
     }
 

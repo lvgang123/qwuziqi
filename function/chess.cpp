@@ -68,7 +68,17 @@ void Chess::actionAddPiece(int row ,int col)
 
 void Chess::ChessAI()
 {
-    if(APP::WorkModle != 0)
+    QHelper::Delay_MSec(200);
+    //机器对战，棋子变化
+    if(APP::WorkModle == -1){
+        if(APP::AIColor == 1)
+            APP::AIColor = -1;
+        else
+            APP::AIColor = 1;
+        AIDO::Instance()->setConnInfo(LcoalvChess,APP::AIColor);
+    }
+
+    if(APP::WorkModle == 1)
         return;
     if(APP::AIColor != JudgeModel::Instance()->NextColour())
         return;
