@@ -1,6 +1,10 @@
 #ifndef QHELPER_H
 #define QHELPER_H
 
+/**
+ * 帮助函数库，用于全局调用的部分通用函数 整理:lvgang 2020-7-1
+ */
+
 #include "head.h"
 
 class QHelper

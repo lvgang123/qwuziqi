@@ -5,6 +5,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include "function/judgemodel.h"
 
 Show* Show::self;
 
@@ -53,7 +54,11 @@ void Show::addMenu()
     QAction *actionPVP = new QAction("双人对战", this);
     connect(actionPVP, &QAction::triggered,
             [=](){
+                    if(APP::WorkModle == 0)
+                        this->restart();
+
                     qcout<<"双人大战";
+                    APP::WorkModle = 1;
                 });
     gameMenu->addAction(actionPVP);
 
@@ -61,7 +66,22 @@ void Show::addMenu()
     QAction *actionPVE = new QAction("人机对战", this);
     connect(actionPVE, &QAction::triggered,
             [=](){
+                    APP::WorkModle = 0;
+
+                    //确定谁先走
+                    QMessageBox::StandardButton btnValue = QMessageBox::information(this, "先手确认", " 是否同意机器先走?"
+                                                                                    ,QMessageBox::Yes, QMessageBox::No);
+
+                    if (btnValue == QMessageBox::Yes){
+                        APP::AIColor = -1;
+                        this->restart();
+                    }else {
+                        APP::AIColor = 1;
+                        this->restart();
+                    }
+
                     qcout<<"人机对战";
+
                 });
     gameMenu->addAction(actionPVE);
 
@@ -91,7 +111,7 @@ void Show::start()
     update();
 }
 
-void Show::paintEvent(QPaintEvent *event)           //耗费资源
+void Show::paintEvent(QPaintEvent *event)           //耗费资源事件
 {
     QPainter painter(this);
    // 绘制棋盘网格
@@ -104,7 +124,6 @@ void Show::paintEvent(QPaintEvent *event)           //耗费资源
        painter.drawLine(APP::kBoardMargin, APP::kBoardMargin + APP::kBlockSize * i, size().width() - APP::kBoardMargin,
                         APP::kBoardMargin + APP::kBlockSize * i);
    }
-
 
     // 绘制落子标记
     QBrush brush;
@@ -119,7 +138,6 @@ void Show::paintEvent(QPaintEvent *event)           //耗费资源
        painter.drawRect(APP::kBoardMargin + APP::kBlockSize * clickPosCol - APP::kMarkSize / 2,
                         APP::kBoardMargin + APP::kBlockSize * clickPosRow - APP::kMarkSize / 2, APP::kMarkSize, APP::kMarkSize);
     }
-
 
    //绘制棋子
     for(int i = 0; i < APP::gameMapVec.size();i++)
@@ -211,8 +229,10 @@ void Show::mouseReleaseEvent(QMouseEvent *event)
 {
     if (clickPosRow>=0 && clickPosCol>=0)
     {
-        emit actionByPerson(clickPosRow, clickPosCol);
-        qcout << QString("(%1,%2)").arg(clickPosCol).arg(clickPosRow);
+        if(APP::WorkModle != 0 || JudgeModel::Instance()->NextColour() != APP::AIColor){
+            emit actionByPerson(clickPosRow, clickPosCol);
+            qcout << QString("(%1,%2)").arg(clickPosCol).arg(clickPosRow);
+        }
     }
 }
 
@@ -224,6 +244,12 @@ void Show::UpdateShow()
 void Show::restart()
 {
     APP::initchess();
+
+    //机器先走往中间首子靠
+    if(APP::WorkModle == 0 && APP::AIColor == -1){
+        APP::gameMapVec[7][7] = -1;
+    }
+
     update();
 }
 
@@ -237,7 +263,7 @@ void Show::GameOver(int index)
     else if (index == 0)
         str = "no player";
     QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!\nDo you want restart?"
-                                                                    ,QMessageBox::Yes, QMessageBox::No);
+                                                                    ,QMessageBox::Yes/*, QMessageBox::No*/);
 
     // 重置游戏状态，否则容易死循环
     if (btnValue == QMessageBox::Yes)

@@ -1,6 +1,12 @@
 #ifndef JUDGEMODEL_H
 #define JUDGEMODEL_H
 
+/**
+ * 判断模块模块 整理:lvgang 2020-6-30
+ * 1.判断对局是否结束，是否和局
+ * 2.判断下一步是黑棋走还是白棋
+ */
+
 #include <QObject>
 #include "help/head.h"
 
@@ -20,15 +26,11 @@ private slots:
 
 
 public slots:
-    void start();
-    void setConnInfo(vChess* inchess);
-
-    //判断对局是否结束
-    bool isWin(int row ,int col);
-    //判断是否和棋
-    bool isDeadGame();
-    //判断下一步是黑棋还是白起
-    int NextColour();
+    void start();                           //模块启动函数
+    void setConnInfo(vChess* inchess);      //模块设定函数
+    bool isWin(int row ,int col);           //判断对局是否结束
+    bool isDeadGame();                      //判断是否和棋
+    int NextColour();                       //判断下一步是黑棋还是白起
 
 };
 

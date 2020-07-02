@@ -58,6 +58,6 @@ void AppInit::initJudge()
 
 void AppInit::initAIdo()
 {
-    AIDO::Instance()->setConnInfo(&APP::gameMapVec);
+    AIDO::Instance()->setConnInfo(&APP::gameMapVec, APP::AIColor);
     AIDO::Instance()->start();
 }

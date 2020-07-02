@@ -1,5 +1,6 @@
 #include "chess.h"
 #include "judgemodel.h"
+#include "AI/aido.h"
 
 QScopedPointer<Chess> Chess::self;  //调用QScopedPointer智能指针格式
 
@@ -69,5 +70,10 @@ void Chess::ChessAI()
 {
     if(APP::WorkModle != 0)
         return;
+    if(APP::AIColor != JudgeModel::Instance()->NextColour())
+        return;
 
+    int row,col;
+    AIDO::Instance()->actionByAI(row ,col);
+    actionAddPiece(row ,col);
 }

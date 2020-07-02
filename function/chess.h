@@ -1,6 +1,13 @@
 #ifndef CHESS_H
 #define CHESS_H
 
+/**
+ * 棋盘模块 整理:lvgang 2020-6-30
+ * 1.为整个棋盘的添加棋子（actionAddPiece）
+ * 2.当发现棋盘添加时发送信号进行界更新（UpdateShow）
+ * 3.调用AI模块完成AI下棋（ChessAI）
+ */
+
 #include <QObject>
 #include "help/head.h"
 
@@ -17,21 +24,18 @@ private:
     vChess* LcoalvChess;
 
 private slots:
-    //AI下棋
-    void ChessAI();
+    void ChessAI();                     //AI下棋
 
 signals:
-    //棋盘显示更新
-    void UpdateShow();
-    //游戏结束,1-白胜 -1-黑胜
-    void GameOver(int);
-    //添加棋子结束信号
-    void addOver(int next);
+    void UpdateShow();                  //棋盘显示更新
+    void GameOver(int);                 //游戏结束,1-白胜 -1-黑胜
+    void addOver(int next);             //添加棋子结束信号
 
 public slots:
-    void start();
-    void setConnInfo(vChess* inchess);
-    void actionAddPiece(int row ,int col);      //棋子增加函数
+    void start();                       //模块启动函数
+    void setConnInfo(vChess* inchess);  //模块设定函数
+    void actionAddPiece(int row ,
+                        int col);       //棋子增加函数
 };
 
 #endif // CHESS_H

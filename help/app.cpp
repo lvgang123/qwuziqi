@@ -1,6 +1,7 @@
 #include "app.h"
 
 int APP::WorkModle = 1;
+int APP::AIColor = 1;
 
 int APP::kBoardSizeNum = 15;
 int APP::kBoardMargin = 50;
@@ -20,7 +21,7 @@ void APP::initchess()
     gameMapVec.clear();
     for (int i = 0; i < kBoardSizeNum; i++)
     {
-        std::vector<int> lineBoard;
+        LChess lineBoard;
         for (int j = 0; j < kBoardSizeNum; j++)
             lineBoard.push_back(0);
         gameMapVec.push_back(lineBoard);

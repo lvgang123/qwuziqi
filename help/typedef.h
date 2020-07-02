@@ -5,3 +5,6 @@
 #include <vector>
 
 typedef std::vector<std::vector<int>> vChess;
+typedef std::vector<int> LChess;
+
+
