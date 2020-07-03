@@ -1,6 +1,8 @@
 #include "chess.h"
 #include "judgemodel.h"
 #include "AI/aido.h"
+#include "frmshow/show.h"
+#include "chesser.h"
 
 QScopedPointer<Chess> Chess::self;  //调用QScopedPointer智能指针格式
 
@@ -33,6 +35,7 @@ void Chess::setConnInfo(vChess* inchess)
 
 void Chess::actionAddPiece(int row ,int col)
 {
+    int startime = clock();
     //判断行、列是够越界
     if(row >= LcoalvChess->size()){
         qcout<<"棋盘输入行越界";
@@ -49,11 +52,17 @@ void Chess::actionAddPiece(int row ,int col)
         return;
     }
 
-    int now_piece = JudgeModel::Instance()->NextColour();
-    (*LcoalvChess)[row][col] = now_piece;
 
+    int now_piece = JudgeModel::Instance()->NextColour();
+    {
+    static QMutex mutex;
+    QMutexLocker locker(&mutex);    //创建互斥锁,出作用域时自动解锁销毁
+    (*LcoalvChess)[row][col] = now_piece;
+    }
     //棋盘容器添加后更新主界面
+    APP::Show_waite = true;
     emit UpdateShow();
+    QHelper::wait_false(APP::Show_waite);
 
     //棋局判断
     //对胜负进行判断
@@ -62,28 +71,14 @@ void Chess::actionAddPiece(int row ,int col)
     else if(JudgeModel::Instance()->isDeadGame())
         emit GameOver(0);
 
-    //机器下棋
-    this->ChessAI();
-}
-
-void Chess::ChessAI()
-{
-    QHelper::Delay_MSec(200);
-    //机器对战，棋子变化
-    if(APP::WorkModle == -1){
-        if(APP::AIColor == 1)
-            APP::AIColor = -1;
-        else
-            APP::AIColor = 1;
-        AIDO::Instance()->setConnInfo(LcoalvChess,APP::AIColor);
+    //计算平均用时，千次
+    int endtime = clock();
+    count_record++;
+    time_record = time_record + (double)(endtime - startime) * 1000 / CLOCKS_PER_SEC;
+    //qcout<<time_record;
+    if(count_record >= 1000){
+        qcout<<"（棋盘增加及界面绘制）千次输入平均时间:"<<time_record/count_record<<"ms";
+        count_record = 0;
+        time_record = 0;
     }
-
-    if(APP::WorkModle == 1)
-        return;
-    if(APP::AIColor != JudgeModel::Instance()->NextColour())
-        return;
-
-    int row,col;
-    AIDO::Instance()->actionByAI(row ,col);
-    actionAddPiece(row ,col);
 }

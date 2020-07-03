@@ -25,6 +25,9 @@ public:
     static int kPosDelta;               // 鼠标点击的模糊距离上限
     static int kAIDelay;                // AI下棋的思考时间
 
+    //全局变量
+    static bool Show_waite;             //绘制等待位
+
     //初始化棋盘函数
     static void initchess();
 

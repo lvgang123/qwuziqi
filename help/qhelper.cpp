@@ -192,3 +192,11 @@ void QHelper::Delay_MSec(unsigned int msec)
     QTimer::singleShot(msec, &loop, SLOT(quit()));//创建单次定时器，槽函数为事件循环的退出函数
     loop.exec();//事件循环开始执行，程序会卡在这里，直到定时时间到，本循环被退出
 }
+
+void QHelper::wait_false(bool &wait)
+{
+    QTime dieTime = QTime::currentTime().addMSecs(5000);
+    while (QTime::currentTime() < dieTime && wait) {
+        Delay_MSec(2);
+    }
+}

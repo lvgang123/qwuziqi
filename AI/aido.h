@@ -12,17 +12,15 @@
  */
 #include "chead.h"
 
-using namespace std;
-
 class AIDO
 {
 public:
-    static AIDO *Instance();
+    static AIDO *Instance(const int num);
     explicit AIDO();
     ~AIDO();
 
 private:
-    static unique_ptr<AIDO> self;
+    static unique_ptr<AIDO> self[2];
 
     vChess* LcoalvChess;
     vChess scoreMapVec;

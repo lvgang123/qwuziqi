@@ -23,6 +23,7 @@ private:
 private slots:
     void initShow();        //界面初始化
     void initChess();       //Chess模块初始化
+    void initChesser();     //C旗手模块初始化
     void initJudge();       //判断初始化
     void initAIdo();        //AI初始化
 

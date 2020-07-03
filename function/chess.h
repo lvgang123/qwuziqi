@@ -22,9 +22,10 @@ private:
     static QScopedPointer<Chess> self;
 
     vChess* LcoalvChess;
+    int count_record = 0;
+    int time_record = 0;
 
 private slots:
-    void ChessAI();                     //AI下棋
 
 signals:
     void UpdateShow();                  //棋盘显示更新
