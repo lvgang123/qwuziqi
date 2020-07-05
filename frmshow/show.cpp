@@ -25,8 +25,8 @@ Show *Show::Instance()        //instance译为例子
 
 void Show::setConnInfo(vChess* inchess)
 {
-    this->LcoalvChess = inchess;
-    //std::cout<<LcoalvChess<<"\n";
+    this->LocalvChess = inchess;
+    //std::cout<<LocalvChess<<"\n";
 }
 
 Show::Show(QWidget *parent) : QMainWindow(parent)
@@ -118,7 +118,7 @@ void Show::addMenu()
 
 void Show::start()
 {
-    qcout<<LcoalvChess->at(0).at(0);
+    qcout<<LocalvChess->at(0).at(0);
     qcout<<"show model start";
     update();
 }
@@ -284,14 +284,16 @@ void Show::GameOver(int index)
         winblack++;
         str = "black player";
     }
-    else if (index == 0)
+    else if (index == 0){
+        winno++;
         str = "no player";
+    }
 
     //描述总的场次胜利
-    comparestr = QString("黑子赢:%1场，白字赢:%2场").arg(winblack).arg(winwhite);
+    comparestr = QString("黑子赢:%1场，白字赢:%2场,和棋:%3场").arg(winblack).arg(winwhite).arg(winno);
     qcout<<comparestr;
 
-    if(winblack>200 || winwhite>200){
+    if(winblack>100 || winwhite>100 || winno>100){
 
         QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!\nDo you want restart?\n"+comparestr
                                                                         ,QMessageBox::Yes/*, QMessageBox::No*/);
@@ -301,6 +303,7 @@ void Show::GameOver(int index)
         {
             winblack = 0;
             winwhite = 0;
+            winno=0;
             restart();
         }
     }else {

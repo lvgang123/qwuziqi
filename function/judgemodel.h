@@ -20,7 +20,7 @@ public:
 private:
     static QScopedPointer<JudgeModel> self;
 
-    vChess* LcoalvChess;
+    vChess* LocalvChess;
 
 private slots:
 

@@ -21,7 +21,7 @@ public:
 private:
     static QScopedPointer<Chess> self;
 
-    vChess* LcoalvChess;
+    vChess* LocalvChess;
     int count_record = 0;
     int time_record = 0;
 

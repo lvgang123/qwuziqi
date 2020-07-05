@@ -26,7 +26,7 @@ void JudgeModel::start()
 
 void JudgeModel::setConnInfo(vChess* inchess)
 {
-    LcoalvChess = inchess;
+    LocalvChess = inchess;
 }
 
 bool JudgeModel::isWin(int row ,int col)
@@ -37,11 +37,11 @@ bool JudgeModel::isWin(int row ,int col)
    {
        // 往左5个，往右匹配4个子，20种情况
        if (col - i >= 0 &&
-           col - i + 4 < LcoalvChess->size() &&
-           (*LcoalvChess)[row][col - i] == (*LcoalvChess)[row][col - i + 1] &&
-           (*LcoalvChess)[row][col - i] == (*LcoalvChess)[row][col - i + 2] &&
-           (*LcoalvChess)[row][col - i] == (*LcoalvChess)[row][col - i + 3] &&
-           (*LcoalvChess)[row][col - i] == (*LcoalvChess)[row][col - i + 4])
+           col - i + 4 < LocalvChess->size() &&
+           (*LocalvChess)[row][col - i] == (*LocalvChess)[row][col - i + 1] &&
+           (*LocalvChess)[row][col - i] == (*LocalvChess)[row][col - i + 2] &&
+           (*LocalvChess)[row][col - i] == (*LocalvChess)[row][col - i + 3] &&
+           (*LocalvChess)[row][col - i] == (*LocalvChess)[row][col - i + 4])
            return true;
    }
 
@@ -49,25 +49,25 @@ bool JudgeModel::isWin(int row ,int col)
    for (int i = 0; i < 5; i++)
    {
        if (row - i >= 0 &&
-           row - i + 4 <  LcoalvChess->size() &&
-           (*LcoalvChess)[row - i][col] == (*LcoalvChess)[row - i + 1][col] &&
-           (*LcoalvChess)[row - i][col] == (*LcoalvChess)[row - i + 2][col] &&
-           (*LcoalvChess)[row - i][col] == (*LcoalvChess)[row - i + 3][col] &&
-           (*LcoalvChess)[row - i][col] == (*LcoalvChess)[row - i + 4][col])
+           row - i + 4 <  LocalvChess->size() &&
+           (*LocalvChess)[row - i][col] == (*LocalvChess)[row - i + 1][col] &&
+           (*LocalvChess)[row - i][col] == (*LocalvChess)[row - i + 2][col] &&
+           (*LocalvChess)[row - i][col] == (*LocalvChess)[row - i + 3][col] &&
+           (*LocalvChess)[row - i][col] == (*LocalvChess)[row - i + 4][col])
            return true;
    }
 
    // 左斜方向
    for (int i = 0; i < 5; i++)
    {
-       if (row + i <  LcoalvChess->size() &&
+       if (row + i <  LocalvChess->size() &&
            row + i - 4 >= 0 &&
            col - i >= 0 &&
-           col - i + 4 <  LcoalvChess->size() &&
-           (*LcoalvChess)[row + i][col - i] == (*LcoalvChess)[row + i - 1][col - i + 1] &&
-           (*LcoalvChess)[row + i][col - i] == (*LcoalvChess)[row + i - 2][col - i + 2] &&
-           (*LcoalvChess)[row + i][col - i] == (*LcoalvChess)[row + i - 3][col - i + 3] &&
-           (*LcoalvChess)[row + i][col - i] == (*LcoalvChess)[row + i - 4][col - i + 4])
+           col - i + 4 <  LocalvChess->size() &&
+           (*LocalvChess)[row + i][col - i] == (*LocalvChess)[row + i - 1][col - i + 1] &&
+           (*LocalvChess)[row + i][col - i] == (*LocalvChess)[row + i - 2][col - i + 2] &&
+           (*LocalvChess)[row + i][col - i] == (*LocalvChess)[row + i - 3][col - i + 3] &&
+           (*LocalvChess)[row + i][col - i] == (*LocalvChess)[row + i - 4][col - i + 4])
            return true;
    }
 
@@ -75,13 +75,13 @@ bool JudgeModel::isWin(int row ,int col)
    for (int i = 0; i < 5; i++)
    {
        if (row - i >= 0 &&
-           row - i + 4 <  LcoalvChess->size() &&
+           row - i + 4 <  LocalvChess->size() &&
            col - i >= 0 &&
-           col - i + 4 <  LcoalvChess->size() &&
-           (*LcoalvChess)[row - i][col - i] == (*LcoalvChess)[row - i + 1][col - i + 1] &&
-           (*LcoalvChess)[row - i][col - i] == (*LcoalvChess)[row - i + 2][col - i + 2] &&
-           (*LcoalvChess)[row - i][col - i] == (*LcoalvChess)[row - i + 3][col - i + 3] &&
-           (*LcoalvChess)[row - i][col - i] == (*LcoalvChess)[row - i + 4][col - i + 4])
+           col - i + 4 <  LocalvChess->size() &&
+           (*LocalvChess)[row - i][col - i] == (*LocalvChess)[row - i + 1][col - i + 1] &&
+           (*LocalvChess)[row - i][col - i] == (*LocalvChess)[row - i + 2][col - i + 2] &&
+           (*LocalvChess)[row - i][col - i] == (*LocalvChess)[row - i + 3][col - i + 3] &&
+           (*LocalvChess)[row - i][col - i] == (*LocalvChess)[row - i + 4][col - i + 4])
            return true;
    }
 
@@ -91,10 +91,10 @@ bool JudgeModel::isWin(int row ,int col)
 bool JudgeModel::isDeadGame()
 {
     // 出现空格为
-    for (int i = 0; i < LcoalvChess->size(); i++)
-        for (int j = 0; j < LcoalvChess->size(); j++)
+    for (int i = 0; i < LocalvChess->size(); i++)
+        for (int j = 0; j < LocalvChess->size(); j++)
         {
-            if ((*LcoalvChess)[i][j] == 0)
+            if ((*LocalvChess)[i][j] == 0)
                 return false;
         }
 
@@ -107,11 +107,11 @@ int JudgeModel::NextColour()
     int black_piece = 0;
     int white_piece = 0;
 
-    for(int i = 0; i < LcoalvChess->size();i++){
-        for(int k = 0; k < (*LcoalvChess)[i].size(); k++){
-            if((*LcoalvChess)[i][k] == -1)
+    for(int i = 0; i < LocalvChess->size();i++){
+        for(int k = 0; k < (*LocalvChess)[i].size(); k++){
+            if((*LocalvChess)[i][k] == -1)
                 black_piece++;
-            if((*LcoalvChess)[i][k] == 1)
+            if((*LocalvChess)[i][k] == 1)
                 white_piece++;
         }
     }

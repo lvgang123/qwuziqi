@@ -21,10 +21,11 @@ public:
 private:
     static Show* self;
 
-    vChess* LcoalvChess;
+    vChess* LocalvChess;
     int clickPosRow, clickPosCol;                   // 存储鼠标点击的位置
     int winblack = 0;
     int winwhite = 0;
+    int winno = 0;
 
 protected:
     void paintEvent(QPaintEvent *event);            // 更新绘制整个界面

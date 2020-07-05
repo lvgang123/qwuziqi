@@ -1,5 +1,7 @@
 #include "appinit.h"
 #include "ai/aido.h"
+#include "ai/aideep.h"
+#include "ai/aicore.h"
 #include "frmshow/show.h"
 #include "chess.h"
 #include "chesser.h"
@@ -67,8 +69,11 @@ void AppInit::initJudge()
 
 void AppInit::initAIdo()
 {
-    AIDO::Instance(0)->setConnInfo(&APP::gameMapVec, APP::AIColor);
+    AIDO::Instance(0)->setConnInfo(&APP::gameMapVec, 5, APP::AIColor);
     AIDO::Instance(0)->start();
-    AIDO::Instance(1)->setConnInfo(&APP::gameMapVec, -APP::AIColor);
+    AIDO::Instance(1)->setConnInfo(&APP::gameMapVec, 5, -APP::AIColor);
     AIDO::Instance(1)->start();
+
+    AIdeep::Instance()->setConnInfo(APP::kBoardSizeNum);
+    AICore::Instance()->setConnInfo(APP::kBoardSizeNum);
 }

@@ -30,24 +30,24 @@ void Chess::start()
 
 void Chess::setConnInfo(vChess* inchess)
 {
-    LcoalvChess = inchess;
+    LocalvChess = inchess;
 }
 
 void Chess::actionAddPiece(int row ,int col)
 {
     int startime = clock();
     //判断行、列是够越界
-    if(row >= LcoalvChess->size()){
+    if(row >= LocalvChess->size()){
         qcout<<"棋盘输入行越界";
         return;
     }
-    if(col >= (*LcoalvChess)[row].size()){
+    if(col >= (*LocalvChess)[row].size()){
         qcout<<"棋盘输入列越界";
         return;
     }
 
     //判断该处是否有棋子
-    if((*LcoalvChess)[row][col] != 0){
+    if((*LocalvChess)[row][col] != 0){
         qcout<<"该处已有棋子";
         return;
     }
@@ -57,7 +57,7 @@ void Chess::actionAddPiece(int row ,int col)
     {
     static QMutex mutex;
     QMutexLocker locker(&mutex);    //创建互斥锁,出作用域时自动解锁销毁
-    (*LcoalvChess)[row][col] = now_piece;
+    (*LocalvChess)[row][col] = now_piece;
     }
     //棋盘容器添加后更新主界面
     APP::Show_waite = true;
