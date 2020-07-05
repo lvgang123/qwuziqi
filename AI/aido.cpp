@@ -1,20 +1,19 @@
 #include "aido.h"
-#include "mutex"
 
-unique_ptr<AIDO> AIDO::self;
+unique_ptr<AIDO> AIDO::self[2];
 
-AIDO *AIDO::Instance()        //instance译为例子  创建实例
+AIDO *AIDO::Instance(const int num)        //instance译为例子  创建实例
 {
-    if (self == NULL) {
+    if (self[num] == NULL) {
         mutex mutex;
         mutex.lock();
-        if (self == NULL) {
-            self.reset(new AIDO);    //将self指针指向new AppInit
+        if (self[num] == NULL) {
+            self[num].reset(new AIDO);    //将self指针指向new AppInit
         }
         mutex.unlock();
     }
 
-    return self.get();
+    return self[num].get();
 }
 
 AIDO::AIDO()
@@ -53,7 +52,7 @@ void AIDO::actionByAI(int &row,int &col)
 {
     //计算评分数组
     this->calculateScore();
-    this->debuge_vchess(scoreMapVec);
+    //this->debuge_vchess(scoreMapVec);
 
     //选择落子点
     CPoint result_piece = Select_max();
@@ -127,6 +126,10 @@ void AIDO::GetTran(int row,int col,vChess &tranMapVec)
     for (int y = -1; y <= 1; y++)
         for (int x = -1; x <= 1; x++)
         {
+            //去掉多余分支，减少计算量
+            if((x+y)<0 || (x == 1 && y==-1))
+                continue;
+
             int personNum = 0; // 玩家连成子的个数
             int botNum = 0; // AI连成子的个数
             int emptyNum = 0; // 各方向空白位的个数
@@ -313,9 +316,18 @@ void AIDO::debuge_vchess(vChess outMapVec)
     {
         for(int k=0;k<outMapVec[i].size();k++)
         {
-            cout<<outMapVec[i][k]<<" - ";
+            int out_int = outMapVec[i][k];
+            cout<<out_int;
+            if(out_int == 0)
+                out_int++;
+            for(int i=5;i>=0;i--){
+                if((int)(out_int/pow(10,i)) != 0)
+                    break;
+                cout<<" ";
+            }
+            cout<<" ";
         }
         cout<<"\n";
     }
-    cout<<"\n";
+    cout<<"\n\n";
 }

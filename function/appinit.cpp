@@ -2,6 +2,7 @@
 #include "ai/aido.h"
 #include "frmshow/show.h"
 #include "chess.h"
+#include "chesser.h"
 #include "judgemodel.h"
 
 QScopedPointer<AppInit> AppInit::self;  //调用QScopedPointer智能指针格式
@@ -31,6 +32,7 @@ void AppInit::start()
 
     this->initShow();
     this->initChess();
+    this->initChesser();
     this->initJudge();
     this->initAIdo();
 }
@@ -50,6 +52,13 @@ void AppInit::initChess()
     connect(Show::Instance(),SIGNAL(actionByPerson(int,int)), Chess::Instance(), SLOT(actionAddPiece(int,int)));
 }
 
+void AppInit::initChesser()
+{
+    Chesser::Instance()->setConnInfo();
+    Chesser::Instance()->start();
+    connect(Chesser::Instance(),SIGNAL(actionByAI(int,int)), Chess::Instance(), SLOT(actionAddPiece(int,int)));
+}
+
 void AppInit::initJudge()
 {
     JudgeModel::Instance()->setConnInfo(&APP::gameMapVec);
@@ -58,6 +67,8 @@ void AppInit::initJudge()
 
 void AppInit::initAIdo()
 {
-    AIDO::Instance()->setConnInfo(&APP::gameMapVec, APP::AIColor);
-    AIDO::Instance()->start();
+    AIDO::Instance(0)->setConnInfo(&APP::gameMapVec, APP::AIColor);
+    AIDO::Instance(0)->start();
+    AIDO::Instance(1)->setConnInfo(&APP::gameMapVec, -APP::AIColor);
+    AIDO::Instance(1)->start();
 }

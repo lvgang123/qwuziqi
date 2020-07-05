@@ -23,7 +23,10 @@ SOURCES += main.cpp \
     function/judgemodel.cpp \
     function/chess.cpp \
     help/qhelper.cpp \
-    frmshow/show.cpp
+    frmshow/show.cpp \
+    AI/aicore.cpp \
+    AI/aideep.cpp \
+    function/chesser.cpp
 
 HEADERS += \
     AI/chead.h \
@@ -35,4 +38,7 @@ HEADERS += \
     function/appinit.h \
     function/judgemodel.h \
     function/chess.h \
-    frmshow/show.h
+    frmshow/show.h \
+    AI/aicore.h \
+    AI/aideep.h \
+    function/chesser.h

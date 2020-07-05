@@ -40,6 +40,9 @@ public:
     //延时操作
     static void Delay_MSec(unsigned int msec);
 
+    //等待位false
+    static void wait_false(bool &wait);
+
 };
 
 #endif // QHELPER_H

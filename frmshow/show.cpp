@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QAction>
 #include "function/judgemodel.h"
+#include "function/chesser.h"
 
 Show* Show::self;
 
@@ -43,6 +44,7 @@ Show::Show(QWidget *parent) : QMainWindow(parent)
 
 Show::~Show()
 {
+    qcout<<"窗口关闭";
     if(self != nullptr)
         self = nullptr;
 }
@@ -89,11 +91,9 @@ void Show::addMenu()
     QAction *actionEVE = new QAction("机器对战", this);
     connect(actionEVE, &QAction::triggered,
             [=](){
-                    if(APP::WorkModle == -1)
-                        this->restart();
-
                     qcout<<"机器大战";
                     APP::WorkModle = -1;
+                    this->restart();
                 });
     gameMenu->addAction(actionEVE);
 
@@ -125,6 +125,7 @@ void Show::start()
 
 void Show::paintEvent(QPaintEvent *event)           //耗费资源事件
 {
+    QWidget::paintEvent(event);
     QPainter painter(this);
    // 绘制棋盘网格
    painter.setRenderHint(QPainter::Antialiasing, true); // 抗锯齿
@@ -174,6 +175,7 @@ void Show::paintEvent(QPaintEvent *event)           //耗费资源事件
     }
 
     painter.end();
+    APP::Show_waite = false;
 }
 
 void Show::mouseMoveEvent(QMouseEvent *event)
@@ -248,6 +250,12 @@ void Show::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+void Show::closeEvent(QCloseEvent *event)
+{
+    qcout<<"窗口关闭";
+    Chesser::Instance()->stop();
+}
+
 void Show::UpdateShow()
 {
     update();
@@ -267,19 +275,42 @@ void Show::restart()
 
 void Show::GameOver(int index)
 {
-    QString str;
-    if (index == 1)
+    QString str,comparestr;
+    if (index == 1){
+        winwhite++;
         str = "white player";
-    else if (index == -1)
+    }
+    else if (index == -1){
+        winblack++;
         str = "black player";
+    }
     else if (index == 0)
         str = "no player";
-    QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!\nDo you want restart?"
-                                                                    ,QMessageBox::Yes/*, QMessageBox::No*/);
 
-    // 重置游戏状态，否则容易死循环
-    if (btnValue == QMessageBox::Yes)
-    {
+    //描述总的场次胜利
+    comparestr = QString("黑子赢:%1场，白字赢:%2场").arg(winblack).arg(winwhite);
+    qcout<<comparestr;
+
+    if(winblack>200 || winwhite>200){
+
+        QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!\nDo you want restart?\n"+comparestr
+                                                                        ,QMessageBox::Yes/*, QMessageBox::No*/);
+
+        // 重置游戏状态，否则容易死循环
+        if (btnValue == QMessageBox::Yes)
+        {
+            winblack = 0;
+            winwhite = 0;
+            restart();
+        }
+    }else {
+
         restart();
     }
+
+}
+
+void Show::actionByshow(int row ,int col)
+{
+    emit actionByPerson(row, col);
 }

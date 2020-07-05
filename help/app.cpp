@@ -1,7 +1,7 @@
 #include "app.h"
 
 int APP::WorkModle = 1;
-int APP::AIColor = 1;
+int APP::AIColor = -1;
 
 int APP::kBoardSizeNum = 15;
 int APP::kBoardMargin = 50;
@@ -11,6 +11,7 @@ int APP::kBlockSize = 40;
 int APP::kPosDelta = 20;
 int APP::kAIDelay = 100;
 
+bool APP::Show_waite = false;
 
 vChess APP::gameMapVec;
 
