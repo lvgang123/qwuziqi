@@ -72,13 +72,13 @@ void Chess::actionAddPiece(int row ,int col)
         emit GameOver(0);
 
     //计算平均用时，千次
-    int endtime = clock();
-    count_record++;
-    time_record = time_record + (double)(endtime - startime) * 1000 / CLOCKS_PER_SEC;
-    //qcout<<time_record;
-    if(count_record >= 1000){
-        qcout<<"（棋盘增加及界面绘制）千次输入平均时间:"<<time_record/count_record<<"ms";
-        count_record = 0;
-        time_record = 0;
-    }
+//    int endtime = clock();
+//    count_record++;
+//    time_record = time_record + (double)(endtime - startime) * 1000 / CLOCKS_PER_SEC;
+//    //qcout<<time_record;
+//    if(count_record >= 1000){
+//        qcout<<"（棋盘增加及界面绘制）千次输入平均时间:"<<time_record/count_record<<"ms";
+//        count_record = 0;
+//        time_record = 0;
+//    }
 }

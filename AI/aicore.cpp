@@ -47,7 +47,15 @@ void AICore::initScoreVec()
     }
 }
 
-vChess AICore::calculateScore(vChess calchess,int calCorlor)
+void AICore::setScore(LChess scores)
+{
+    Localscore.clear();
+    for(int i=0;i<scores.size();i++){
+        Localscore.push_back(scores[i]);
+    }
+}
+
+vChess AICore::calculateScore(vChess calchess,int calCorlor,int index)
 {
     // 清空评分数组
     initScoreVec();
@@ -69,7 +77,7 @@ vChess AICore::calculateScore(vChess calchess,int calCorlor)
             vChess killMapVec,makeMapVec;
             this->DealTran(tranMapVec,killMapVec,makeMapVec);
             //对容器进行评分判定,评分包括杀2-5  成1-5
-            scoreMapVec[row][col] += CalculateTran(killMapVec,makeMapVec);
+            scoreMapVec[row][col] += CalculateTran(killMapVec,makeMapVec,index);
         }
 
     return scoreMapVec;
@@ -172,53 +180,53 @@ void AICore::DealTran(vChess tranMapVec,vChess &killMapVec,vChess &makeMapVec)
     }
 }
 
-int AICore::CalculateTran(vChess killMapVec,vChess makeMapVec)
+int AICore::CalculateTran(vChess killMapVec,vChess makeMapVec,int index)
 {
     int score = 0;
     //对杀2-5评分,防守
-    for(int i=0;i<killMapVec.size();i++){
+    for(int i=0;i<killMapVec.size() && index<=0;i++){
         //杀2
-        score += 7 * linejudge(killMapVec[i],2,true,-LocalAICorlor);
+        score += Localscore.at(0) * linejudge(killMapVec[i],2,true,-LocalAICorlor);
         //杀3，双活三为必杀
         if(linejudge(killMapVec[i],3,true,-LocalAICorlor)>3)
-            score += 10000 /** linejudge(killMapVec[i],3,true,-LocalAICorlor)*/;
+            score += Localscore.at(4) ;
         else if(linejudge(killMapVec[i],3,true,-LocalAICorlor)>0)
-            score += 140 * linejudge(killMapVec[i],3,true,-LocalAICorlor);
+            score += Localscore.at(3) * linejudge(killMapVec[i],3,true,-LocalAICorlor);
         else
-            score += 50 * linejudge(killMapVec[i],3,false,-LocalAICorlor);
+            score += Localscore.at(1) * linejudge(killMapVec[i],3,false,-LocalAICorlor);
         //杀4，活四为必杀，单四加活三同样必杀
         if(linejudge(killMapVec[i],4,true,-LocalAICorlor)>0)
-            score += 30000 /** linejudge(killMapVec[i],4,true,-LocalAICorlor)*/;
+            score += Localscore.at(6) ;
         else if(linejudge(killMapVec[i],3,true,-LocalAICorlor)>0 && linejudge(killMapVec[i],4,false,-LocalAICorlor)>0)
-            score += 10000 /** linejudge(killMapVec[i],4,false,-LocalAICorlor)*/;
+            score += Localscore.at(5) ;
         else
-            score += 110 * linejudge(killMapVec[i],4,false,-LocalAICorlor);
+            score += Localscore.at(2) * linejudge(killMapVec[i],4,false,-LocalAICorlor);
         //杀5，必杀
         if(linejudge(killMapVec[i],5,false,-LocalAICorlor)>0)
-            score += 50000;
+            score += Localscore.at(7);
     }
 
     //对成1-5评分
-    for(int i=0;i<makeMapVec.size();i++){
+    for(int i=0;i<makeMapVec.size() && index>=0;i++){
         //成2
-        score += 8 * linejudge(makeMapVec[i],2,true,LocalAICorlor);
+        score += Localscore.at(10) * linejudge(makeMapVec[i],2,true,LocalAICorlor);
         //成3，双活三为必成
         if(linejudge(makeMapVec[i],3,true,LocalAICorlor)>3)
-            score += 20000 /** linejudge(makeMapVec[i],3,true,LocalAICorlor)*/;
+            score += Localscore.at(14) ;
         else if(linejudge(makeMapVec[i],3,true,LocalAICorlor)>0)
-            score += 150 * linejudge(makeMapVec[i],3,true,LocalAICorlor);
+            score += Localscore.at(13) * linejudge(makeMapVec[i],3,true,LocalAICorlor);
         else
-            score += 60 * linejudge(makeMapVec[i],3,false,LocalAICorlor);
+            score += Localscore.at(11) * linejudge(makeMapVec[i],3,false,LocalAICorlor);
         //成4，活四为必成，单四加活三同样必成
         if(linejudge(makeMapVec[i],4,true,LocalAICorlor)>0)
-            score += 40000 /** linejudge(makeMapVec[i],4,true,LocalAICorlor)*/;
+            score += Localscore.at(16) ;
         else if(linejudge(makeMapVec[i],3,true,LocalAICorlor)>0 && linejudge(makeMapVec[i],4,false,LocalAICorlor)>0)
-            score += 20000 /** linejudge(makeMapVec[i],4,false,-LocalAICorlor)*/;
+            score += Localscore.at(15) ;
         else
-            score += 130 * linejudge(makeMapVec[i],4,false,LocalAICorlor);
+            score += Localscore.at(12) * linejudge(makeMapVec[i],4,false,LocalAICorlor);
         //成5，必成
         if(linejudge(makeMapVec[i],5,false,LocalAICorlor)>0)
-            score += 100000 * linejudge(makeMapVec[i],5,false,LocalAICorlor);
+            score += Localscore.at(17) * linejudge(makeMapVec[i],5,false,LocalAICorlor);
     }
     return score;
 }

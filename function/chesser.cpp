@@ -1,6 +1,7 @@
 #include "chesser.h"
 #include "AI/aido.h"
 #include "judgemodel.h"
+#include "AI/aicore.h"
 
 QScopedPointer<Chesser> Chesser::self;  //调用QScopedPointer智能指针格式
 
@@ -32,9 +33,11 @@ void Chesser::start()
             [=](){
                     this->AIplayA();
                     this->AIplayB();
+                    playingA = false;
+                    playingB = false;
                 });
 
-    timer_AI->start(5);
+    timer_AI->start(1);
 }
 
 void Chesser::stop()
@@ -51,13 +54,21 @@ void Chesser::setConnInfo()
 
 }
 
+//黑AI
 void Chesser::AIplayA()
 {
     if(APP::WorkModle == 1)
         return;
-    if(JudgeModel::Instance()->NextColour() != APP::AIColor){
+    if(JudgeModel::Instance()->NextColour() == 1)
         return;
-    }
+    if(APP::WorkModle == 0 && APP::AIColor == 1)
+        return;
+    if(playingA)
+        return;
+    playingA = true;
+
+    AIDO::Instance(0)->setConnInfo(&APP::gameMapVec, APP::deepA, -1);
+    AICore::Instance()->setScore(APP::scoreA);
 
     int row,col;
     int startime = clock();
@@ -67,12 +78,24 @@ void Chesser::AIplayA()
     emit actionByAI(row,col);
 }
 
+//白AI
 void Chesser::AIplayB()
 {
-    if(APP::WorkModle != -1)
+    if(APP::WorkModle == 1)
         return;
-    if(JudgeModel::Instance()->NextColour() == APP::AIColor)
+    if(JudgeModel::Instance()->NextColour() == -1)
         return;
+    if(APP::WorkModle == 0 && APP::AIColor == -1)
+        return;
+    if(playingB){
+        qcout<<"out0";
+        return;
+    }
+    playingB = true;
+
+    AIDO::Instance(1)->setConnInfo(&APP::gameMapVec, APP::deepB, 1);
+    AICore::Instance()->setScore(APP::scoreB);
+    //切换分值
 
     int row,col;
     int startime = clock();

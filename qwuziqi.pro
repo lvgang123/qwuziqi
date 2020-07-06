@@ -1,4 +1,4 @@
-QT     += core gui network
+QT     += core gui network xlsx
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,7 +26,8 @@ SOURCES += main.cpp \
     frmshow/show.cpp \
     AI/aicore.cpp \
     AI/aideep.cpp \
-    function/chesser.cpp
+    function/chesser.cpp \
+    help/writeexcel.cpp
 
 HEADERS += \
     AI/chead.h \
@@ -41,4 +42,5 @@ HEADERS += \
     frmshow/show.h \
     AI/aicore.h \
     AI/aideep.h \
-    function/chesser.h
+    function/chesser.h \
+    help/writeexcel.h

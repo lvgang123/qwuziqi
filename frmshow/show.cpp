@@ -68,11 +68,11 @@ void Show::addMenu()
     QAction *actionPVE = new QAction("人机对战", this);
     connect(actionPVE, &QAction::triggered,
             [=](){
-                    APP::WorkModle = 0;
-
                     //确定谁先走
                     QMessageBox::StandardButton btnValue = QMessageBox::information(this, "先手确认", " 是否同意机器先走?"
                                                                                     ,QMessageBox::Yes, QMessageBox::No);
+
+                    APP::WorkModle = 0;
 
                     if (btnValue == QMessageBox::Yes){
                         APP::AIColor = -1;
@@ -293,7 +293,9 @@ void Show::GameOver(int index)
     comparestr = QString("黑子赢:%1场，白字赢:%2场,和棋:%3场").arg(winblack).arg(winwhite).arg(winno);
     qcout<<comparestr;
 
-    if(winblack>100 || winwhite>100 || winno>100){
+//    QMessageBox::StandardButton btnValue = QMessageBox::information(this, "是否继续", " 是否继续?"
+//                                                                    ,QMessageBox::Yes, QMessageBox::No);
+    if(winblack>200 || winwhite>200 || winno>200){
 
         QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!\nDo you want restart?\n"+comparestr
                                                                         ,QMessageBox::Yes/*, QMessageBox::No*/);

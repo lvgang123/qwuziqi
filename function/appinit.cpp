@@ -30,7 +30,8 @@ AppInit::AppInit(QObject *parent) : QObject(parent)
 void AppInit::start()
 {
     //可以通过指针的形式将棋盘传递进每一个功能模块，使模块解耦合
-    APP::initchess();            //对棋盘进行初始化，否则出现野指针
+    APP::initchess();           //对棋盘进行初始化，否则出现野指针
+    APP::initScore();           //对分数数组初始化
 
     this->initShow();
     this->initChess();
@@ -69,9 +70,7 @@ void AppInit::initJudge()
 
 void AppInit::initAIdo()
 {
-    AIDO::Instance(0)->setConnInfo(&APP::gameMapVec, 5, APP::AIColor);
     AIDO::Instance(0)->start();
-    AIDO::Instance(1)->setConnInfo(&APP::gameMapVec, 5, -APP::AIColor);
     AIDO::Instance(1)->start();
 
     AIdeep::Instance()->setConnInfo(APP::kBoardSizeNum);

@@ -22,7 +22,8 @@ private:
 
 private:
     void initScoreVec();
-    vector<CPoint> Select_max(vChess calchess,vChess nowchess);                                //挑选出最大分数的点
+    vector<CPoint> Select_max(vChess calchess,vChess nowchess);                                //挑选出最大分数的几个点
+    CPoint Select_Point(vector<CPoint> vPoints);        //从容器中筛选出最大值并随机抽取
     int empty_cout(vChess calchess);                    //获取空位置
     void debuge_vchess(vChess outMapVec);               //Vchess数据打印函数
     vChess copyvChess(vChess invchess);

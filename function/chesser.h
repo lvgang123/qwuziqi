@@ -19,6 +19,8 @@ public:
 private:
     static QScopedPointer<Chesser> self;
     QTimer *timer_AI;                       //机器定时检查是否该自己下棋
+    bool playingA = false;
+    bool playingB = false;
 
 private slots:
 

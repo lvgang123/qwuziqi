@@ -11,10 +11,10 @@ class APP
 public:
     //软件模式变量
     static int WorkModle;               //下棋模式，0-人机  1-人人
-    static int AIColor;                 //AI持棋子颜色
+    static int AIColor;                 //AI持棋子颜色,白子1，黑子-1
 
     //棋盘数组
-    static vChess gameMapVec;           //当前游戏棋盘和棋子的情况,空白为0，白子1，黑子-1
+    static vChess gameMapVec;           //当前游戏棋盘和棋子的情况,空白为0，
 
     //棋盘布局
     static int kBoardSizeNum;           // 棋盘尺寸
@@ -27,9 +27,14 @@ public:
 
     //全局变量
     static bool Show_waite;             //绘制等待位
+    static int deepA;                   //黑子计算深度
+    static int deepB;                   //白字计算深度
+    static LChess scoreA;               //黑子分值数据
+    static LChess scoreB;               //白子分值数据
 
     //初始化棋盘函数
     static void initchess();
+    static void initScore();
 
 };
 
